@@ -1,15 +1,29 @@
 name: 'Get & Cache Dependecies'
 description: 'Checkout code and cache dependencies for faster builds'
+inputs: # Define inputs for the composite action 
+  caching: # Define an input to enable/disable caching. Can be any string and can be extended as needed.
+    description: 'Enable or disable caching of dependencies'
+    required: false
+    default: 'true'
+outputs:  # Define outputs for the composite action
+  used-cache:  # Define an output to indicate if cache was used
+    description: 'Indicates whether the cache was used'
+    value: ${{steps.install-deps.outputs.cache}}    # Placeholder for output value. must be set in the steps below.
 runs:
   using: 'composite' # Informs Github that this is a composite action
   steps:         # usual steps as in a typical workflow
     - name: Cache dependencies
+      if: ${{ inputs.caching == 'true' }}  # Conditional step based on input
       id: cache
       uses: actions/cache@v3
       with:
         path: node_modules
         key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
     - name: Install dependencies
-      if: steps.cache.outputs.cache-hit != 'true'
-      run: npm ci
+      id: install-deps
+      if: steps.cache.outputs.cache-hit != 'true' && inputs.caching != 'true'  # Conditional step based on cache hit and input
+      run: |
+        npm ci
+        echo "cache='${ { inputs.caching } }'" >> $GITHUB_OUTPUT" # Set output to indicate cache was not used
+        
       shell: bash # Specify the shell to use, necessary for composite actions
