@@ -74,4 +74,4 @@ jobs:
       - name: Get code # must checkout code to use local custom action
         uses: actions/checkout@v4
       - name: Run JS custom actions
-        uses: ./.github/actions/deploy-s3-javascript # Using the custom JavaScript action
+        uses: /.github/actions/deploy-s3-javascript # Using the custom JavaScript action
