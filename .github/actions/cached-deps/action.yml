@@ -1,0 +1,15 @@
+name: 'Get & Cache Dependecies'
+description: 'Checkout code and cache dependencies for faster builds'
+runs:
+  using: 'composite' # Informs Github that this is a composite action
+  steps:         # usual steps as in a typical workflow
+    - name: Cache dependencies
+      id: cache
+      uses: actions/cache@v3
+      with:
+        path: node_modules
+        key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+    - name: Install dependencies
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: npm ci
+      shell: bash # Specify the shell to use, necessary for composite actions
