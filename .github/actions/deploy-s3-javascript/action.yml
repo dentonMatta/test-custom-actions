@@ -1,5 +1,16 @@
 name: 'Deploy to AWS S3'
 description: 'Deploy a static website to AWS S3 bucket'
+inputs:
+  bucket:
+    description: 'The name of the S3 bucket to deploy to'
+    required: true
+  bucket-region:
+    description: 'The AWS region where the S3 bucket is located'
+    required: false
+    default: 'us-east-1'  
+  dist-folder:
+    description: 'The folder containing the built website files to deploy'
+    required: true
 runs:
   using: 'node20' # Specify the runtime environment as this is a JavaScript custom action
   main: 'main.js'  # name of the file that contains the action's code
