@@ -67,6 +67,7 @@ jobs:
       - name: Output contents
         run: ls
       - name: Deploy site
+        id: deploy-site
         uses: ./.github/actions/deploy-s3-javascript # Using the custom JavaScript action to deploy to S3
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}       # AWS credentials from repository secrets
@@ -75,10 +76,5 @@ jobs:
           bucket: 'test-gha-custon-action-bucket '  # Replace with your S3 bucket name
           bucket-region: 'eu-north-1'   # Replace with your S3 bucket region if different
           dist-folder: './dist'        # Folder containing built website files
-  # information: # Job to demonstrate usage of JavaScript custom action
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Get code # must checkout code to use local custom action
-  #       uses: actions/checkout@v4
-  #     - name: Run JS custom actions
-  #       uses: ./.github/actions/deploy-s3-javascript # Using the custom JavaScript action
+      - name: Output deployed website URL
+        run: echo "Website deployed at ${{ steps.deploy-site.outputs.website-url }}"    

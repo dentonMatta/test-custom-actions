@@ -11,6 +11,10 @@ inputs:
   dist-folder:
     description: 'The folder containing the built website files to deploy'
     required: true
+outputs:
+  website-url:
+    description: 'The URL of the deployed website'
+    
 runs:
   using: 'node20' # Specify the runtime environment as this is a JavaScript custom action
   main: 'main.js'  # name of the file that contains the action's code
